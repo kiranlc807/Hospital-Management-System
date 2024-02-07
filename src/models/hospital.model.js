@@ -1,6 +1,17 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const departmentSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    }
+});
+
 const hospitalSchema = new Schema({
     name: {
         type: String,
@@ -13,7 +24,8 @@ const hospitalSchema = new Schema({
     contactNumber: {
         type: Number,
         required: true
-    }
+    },
+    departments: [departmentSchema]
 });
 
 const Hospital = mongoose.model('Hospital', hospitalSchema);
