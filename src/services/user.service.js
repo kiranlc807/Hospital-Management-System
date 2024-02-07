@@ -26,6 +26,6 @@ export const login = async(body)=>{
   if(!res){
     throw new Error("Incorrect Password");
   }else{
-    return jwt.sign({userId:user._id},process.env.SECRET_KEY)
+    return jwt.sign({userId:user._id,role:user.role},process.env.SECRET_KEY)
   }
 }
