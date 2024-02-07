@@ -17,11 +17,9 @@ export const userAuth = async (req, res, next) => {
         code: HttpStatus.BAD_REQUEST,
         message: 'Authorization token is required'
       };
-    bearerToken = bearerToken.split(' ')[1];
+    let token = bearerToken.split(' ');
 
-    const { user } = await jwt.verify(bearerToken, 'your-secret-key');
-    res.locals.user = user;
-    res.locals.token = bearerToken;
+    req.user = await jwt.verify(token.length>1?token[1]:token[0], process.env.SECRET_KEY);
     next();
   } catch (error) {
     next(error);
