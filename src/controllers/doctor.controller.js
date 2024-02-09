@@ -28,7 +28,7 @@ export const createDoctor = async (req, res) => {
 // Controller function to get all doctors by department ID
 export const getAllDoctorsByDepartmentId = async (req, res) => {
     try {
-        const { hospitalId } = req.params;
+        const hospitalId = req.params._id;
         const userId = req.user.userId; // Assuming user information is attached to the request object
 
         // Call the doctor service to get all doctors by department ID
