@@ -1,6 +1,7 @@
 import { log } from "winston";
 import Appointment from "../models/appointment.model";
 import User from "../models/user.model";
+const mongoose = require('mongoose');
 
 export const createAppointment = async (patientId, doctorId, date) => {
     try {
@@ -66,3 +67,92 @@ export const updateAppointmentStatus = async (appointmentId, status,userObj) => 
     }
 };
 
+// getAllAppointmentsBasedOnDoctor
+
+// export const getAllAppointmentsBasedOnDoctor = async (userObj,doctorId) => {
+//     try {
+//         if(userObj.role=="patient"){
+//             throw new Error("Admin Not Found");
+//         }
+//         const user = await User.findOne({ _id: userObj.userId});
+//         if (!user) {
+//             throw new Error("Admin Not Found");
+//         }
+//         const appointments = await Appointment.aggregate([
+//             {
+//                 $group: {
+//                     _id: '$doctor',
+//                     count: { $sum: 1 },
+//                     appointments: {
+//                         $push: {
+//                             _id: '$_id',
+//                             patient: '$patient',
+//                             date: '$date',
+//                             status: '$status'
+//                             // Add more fields if needed
+//                         }
+//                     }
+//                 }
+//             },
+//         ]);
+//         return appointments;
+//     } catch (error) {
+//         throw new Error(error.message);
+//     }
+// };
+
+exports.getAllAppointmentsBasedOnDoctor = async (userObj, doctorId) => {
+    try {
+        if (userObj.role === "patient") {
+            throw new Error("Unauthorized access"); // Throw error for unauthorized access
+        }
+
+        const user = await User.findOne({ _id: userObj.userId });
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        let aggregationPipeline = [
+            {
+                $group: {
+                    _id: '$doctor',
+                    count: { $sum: 1 },
+                    appointments: {
+                        $push: {
+                            _id: '$_id',
+                            patient: '$patient',
+                            date: '$date',
+                            status: '$status'
+                            // Add more fields if needed
+                        }
+                    }
+                }
+            }
+        ];
+
+        if (doctorId !== undefined) {
+            aggregationPipeline.unshift({
+                $match: { doctor: mongoose.Types.ObjectId(doctorId) }
+            }, {
+                $group: {
+                  _id: "$doctorId",
+                  appointmentCount: { $sum: 1 },
+                  appointments: { $push: "$$ROOT" }
+                }
+              },
+              {
+                $unwind: "$appointments"
+              },
+              {
+                $replaceRoot: { newRoot: "$appointments" }
+              }
+            );
+        }
+
+        const appointments = await Appointment.aggregate(aggregationPipeline);
+
+        return appointments;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};

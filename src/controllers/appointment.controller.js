@@ -54,3 +54,18 @@ export const updateAppointmentStatus = async (req, res) => {
     }
 };
 
+export const getAllAppointmentsBasedOnDoctor = async (req, res) => {
+    try {
+        const appointments = await AppointmentService.getAllAppointmentsBasedOnDoctor(req.user,req.body.doctorId);
+        res.status(HttpStatus.OK).json({
+            code:HttpStatus.OK,
+            data:appointments,
+            message:"Retrived Succussfully"
+        });
+    } catch (error) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+            code:HttpStatus.OK,
+            message:error.message
+        });
+    }
+};

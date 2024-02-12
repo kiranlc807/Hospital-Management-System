@@ -9,7 +9,7 @@ passport.use(new GoogleStrategy({
   },
   async function(accessToken, refreshToken, profile, cb) {
     try {
-      console.log(profile);
+      console.log(profile._json);
       // Generate JWT token
       const token = jwt.sign({ userId: profile.id, role:"patient" }, process.env.SECRET_KEY);
         console.log(token);
