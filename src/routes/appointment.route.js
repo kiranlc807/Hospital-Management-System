@@ -10,5 +10,7 @@ router.get('',userAuth,AppointmentController.getAllAppointments);
 
 router.put('',userAuth,AppointmentController.updateAppointmentStatus);
 
+router.get('/admin',userAuth,AppointmentController.getAllAppointmentsBasedOnDoctor);
+
 
 export default router;

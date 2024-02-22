@@ -3,7 +3,7 @@ import Doctor from '../models/doctor.model';
 import User from '../models/user.model';
 const mongoose = require('mongoose');
 
-export const createDoctor = async (name, hospitalId, departmentName, availability,qualifications, userObj) => {
+export const createDoctor = async (name, hospitalId, departmentId, availability,qualifications, userObj) => {
     try {
         
         if (!userObj || !userObj.userId || !userObj.role) {
@@ -19,23 +19,11 @@ export const createDoctor = async (name, hospitalId, departmentName, availabilit
         if (!hospital) {
             throw new Error('Hospital not found');
         }
-
-        const department = hospital.departments.find(dep =>
-            dep.name.toLowerCase().trim() === departmentName.toLowerCase().trim()
-        );
-        if (!department) {
-            throw new Error('Department not found in the hospital');
-        }
-
-        const doctor = await Doctor.findOne({name:name});
-        if(doctor){
-            throw new Error("Doctor Already Exists");
-        }
       
         const newDoctor = new Doctor({
             name: name,
             hospital: hospitalId,
-            department: department._id,
+            department: departmentId,
             availability: availability,
             qualifications:qualifications
         });
@@ -54,8 +42,7 @@ export const getAllDoctorsByDepartmentId = async (hospitalId,userId) => {
             throw new Error("User Not Found");
         }
  
-        const doctors = await Doctor.find({ hospitalId: hospitalId });
-
+        const doctors = await Doctor.find({ hospital: hospitalId });
         return doctors;
     } catch (error) {
         throw new Error(error.message);
