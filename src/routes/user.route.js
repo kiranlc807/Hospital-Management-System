@@ -16,7 +16,8 @@ router.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
   (req, res) => {
     // Successful authentication, redirect to home or send response as needed.
-    res.redirect('http://localhost:3000/api/v1');
+    const userData = req.user;
+    res.redirect(`http://localhost:3001/dashboard/hospital?userData=${JSON.stringify(userData)}`);
   });
 
 

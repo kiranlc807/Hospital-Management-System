@@ -4,12 +4,12 @@ import * as DoctorService from '../services/doctor.service';
 // Controller function to create a new doctor
 export const createDoctor = async (req, res) => {
     try {
-        const { name, departmentName, availability,qualifications } = req.body;
+        const { name, department, availability,qualifications } = req.body;
         const hospitalId = req.params._id;
         const userObj = req.user; // Assuming user information is attached to the request object
 
         // Call the doctor service to create the new doctor
-        const newDoctor = await DoctorService.createDoctor(name, hospitalId, departmentName, availability,qualifications, userObj);
+        const newDoctor = await DoctorService.createDoctor(name, hospitalId, department, availability,qualifications, userObj);
 
         // Send the newly created doctor as response
         res.status(HttpStatus.CREATED).json({
