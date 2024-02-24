@@ -56,7 +56,7 @@ export const updateAppointmentStatus = async (req, res) => {
 
 export const getAllAppointmentsBasedOnDoctor = async (req, res) => {
     try {
-        const appointments = await AppointmentService.getAllAppointmentsBasedOnDoctor(req.user,req.body.doctorId);
+        const appointments = await AppointmentService.getAllAppointmentsBasedOnDoctor(req.params._id);
         res.status(HttpStatus.OK).json({
             code:HttpStatus.OK,
             data:appointments,

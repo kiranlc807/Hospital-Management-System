@@ -8,9 +8,9 @@ router.post('/:_id',userAuth,AppointmentController.createAppointment);
 
 router.get('',userAuth,AppointmentController.getAllAppointments);
 
-router.put('',userAuth,AppointmentController.updateAppointmentStatus);
+router.put('/doctor',AppointmentController.updateAppointmentStatus);
 
-router.get('/admin',userAuth,AppointmentController.getAllAppointmentsBasedOnDoctor);
+router.get('/doctor/:_id',AppointmentController.getAllAppointmentsBasedOnDoctor);
 
 
 export default router;
